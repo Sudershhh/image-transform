@@ -30,6 +30,10 @@ export async function POST(request: NextRequest) {
     await uploadToS3(buffer, originalKey, file.type);
     const originalUrl = await getPresignedUrl(originalKey);
 
+    if (!originalUrl || typeof originalUrl !== 'string') {
+      throw new Error('Failed to generate presigned URL');
+    }
+
     const imageRecord = await prisma.image.create({
       data: {
         id: imageId,
@@ -123,6 +127,10 @@ async function processImage(imageId: string, originalKey: string, originalUrl: s
       throw new Error(`Failed to upload final image to storage: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
     const processedUrl = await getPresignedUrl(processedKey);
+
+    if (!processedUrl || typeof processedUrl !== 'string') {
+      throw new Error('Failed to generate processed presigned URL');
+    }
 
     if (tempKey) {
       try {

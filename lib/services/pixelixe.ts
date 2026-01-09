@@ -8,9 +8,6 @@ export async function flipImage(
   horizontal: boolean = true,
   vertical: boolean = false
 ): Promise<ArrayBuffer> {
-  // Presigned URLs from AWS SDK contain query parameters that are already properly encoded.
-  // When passing a full URL as a query parameter value, we use encodeURIComponent()
-  // to properly encode the entire URL string without breaking internal query parameters.
   const baseParams = new URLSearchParams({
     horizontal: horizontal.toString(),
     vertical: vertical.toString(),
