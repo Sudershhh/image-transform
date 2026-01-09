@@ -33,13 +33,30 @@ export function ImageCard({ image }: ImageCardProps) {
               src={image.processedUrl}
               alt={image.originalFilename || 'Processed image'}
               className="w-full h-full object-cover"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                if (image.originalUrl && target.src !== image.originalUrl) {
+                  target.src = image.originalUrl;
+                } else {
+                  target.style.display = 'none';
+                }
+              }}
+              loading="lazy"
             />
-          ) : (
+          ) : image.originalUrl ? (
             <img
               src={image.originalUrl}
               alt={image.originalFilename || 'Original image'}
               className="w-full h-full object-cover"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = 'none';
+              }}
+              loading="lazy"
             />
+          ) : (
+            <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
+              No image available
+            </div>
           )}
           <div className="absolute top-2 right-2">
             {image.status === 'processing' && (

@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useImageProcessing } from '@/hooks/useImageProcessing';
 import { ImageDetail } from './ImageDetail';
 import { useImageStore } from '@/store/imageStore';
+import { Header } from '@/components/layout/Header';
 import { toast } from 'sonner';
 
 interface ImageDetailContainerProps {
@@ -16,7 +17,7 @@ export function ImageDetailContainer({ imageId }: ImageDetailContainerProps) {
   const { deleteImage: deleteImageFromStore } = useImageStore();
 
   const handleBack = () => {
-    router.push('/');
+    router.push('/home');
   };
 
   const handleDelete = async () => {
@@ -33,7 +34,7 @@ export function ImageDetailContainer({ imageId }: ImageDetailContainerProps) {
 
       deleteImageFromStore(imageId);
       toast.success('Image deleted successfully');
-      router.push('/');
+      router.push('/home');
     } catch (error) {
       console.error('Error deleting image:', error);
       toast.error('Failed to delete image');
@@ -64,15 +65,18 @@ export function ImageDetailContainer({ imageId }: ImageDetailContainerProps) {
   };
 
   return (
-    <ImageDetail
-      image={image}
-      isProcessing={isProcessing}
-      isCompleted={isCompleted}
-      isFailed={isFailed}
-      onBack={handleBack}
-      onDelete={handleDelete}
-      onCopyUrl={handleCopyUrl}
-      onDownload={handleDownload}
-    />
+    <>
+      <Header />
+      <ImageDetail
+        image={image}
+        isProcessing={isProcessing}
+        isCompleted={isCompleted}
+        isFailed={isFailed}
+        onBack={handleBack}
+        onDelete={handleDelete}
+        onCopyUrl={handleCopyUrl}
+        onDownload={handleDownload}
+      />
+    </>
   );
 }

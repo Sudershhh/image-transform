@@ -23,6 +23,12 @@ export function useImageList() {
 
   useEffect(() => {
     fetchImages();
+    // Also refetch on window focus to catch any updates
+    const handleFocus = () => {
+      fetchImages();
+    };
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
   }, [fetchImages]);
 
   return {
