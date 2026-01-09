@@ -1,43 +1,59 @@
-'use client';
+"use client";
 
-import { UploadContainer } from '@/components/upload/UploadContainer';
-import { ImageListContainer } from '@/components/image/ImageListContainer';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Header } from '@/components/layout/Header';
+import { UploadContainer } from "@/components/upload/UploadContainer";
+import { ImageListContainer } from "@/components/image/ImageListContainer";
+import { Header } from "@/components/layout/Header";
 
 export default function Home() {
   return (
-    <>
-      <Header />
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 max-w-6xl pt-20">
-        <div className="mb-6 sm:mb-8 text-center">
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">
-            🖼️ Image Transformer
-          </h1>
-          <p className="text-sm sm:text-base text-muted-foreground">
-            Upload an image to remove its background and flip it horizontally
-          </p>
-        </div>
+    <div className="min-h-screen bg-background">
+      {/* Subtle gradient background */}
+      <div className="fixed inset-0 bg-gradient-to-br from-primary/[0.02] via-transparent to-primary/[0.02] pointer-events-none" />
 
-        <div className="space-y-8 sm:space-y-12">
-          {/* Upload Section */}
-          <section>
-            <UploadContainer />
-          </section>
+      <div className="relative">
+        <Header />
 
-          {/* Recent Images Section */}
-          <section>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg sm:text-xl">Your Recent Images</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ImageListContainer />
-              </CardContent>
-            </Card>
-          </section>
-        </div>
+        {/* Main Content */}
+        <main className="max-w-5xl mx-auto px-6 pt-20 pb-10">
+          <div className="space-y-12">
+            {/* Upload Section */}
+            <section className="max-w-xl mx-auto">
+              <div className="text-center mb-6">
+                <h1 className="text-2xl font-semibold tracking-tight text-foreground mb-2">
+                  Transform your images
+                </h1>
+                <p className="text-sm text-muted-foreground">
+                  Upload an image to remove backgrounds, flip, and enhance
+                  instantly
+                </p>
+              </div>
+              <UploadContainer />
+            </section>
+
+            {/* Divider */}
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-border/60" />
+              </div>
+            </div>
+
+            {/* Recent Images Section */}
+            <section>
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-lg font-semibold text-foreground">
+                    Recent Images
+                  </h2>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Your transformed images appear here
+                  </p>
+                </div>
+              </div>
+              <ImageListContainer />
+            </section>
+          </div>
+        </main>
       </div>
-    </>
+    </div>
   );
 }

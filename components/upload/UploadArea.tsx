@@ -61,7 +61,7 @@ export function UploadArea({
 
   return (
     <Card className="w-full">
-      <CardContent className="p-6">
+      <CardContent className="p-4 sm:p-5">
         <input
           ref={fileInputRef}
           type="file"
@@ -73,7 +73,7 @@ export function UploadArea({
 
         {preview ? (
           <div className="relative">
-            <div className="relative w-full h-64 rounded-lg overflow-hidden border-2 border-dashed border-border">
+            <div className="relative w-full h-48 sm:h-52 rounded-lg overflow-hidden border-2 border-dashed border-border">
               <img
                 src={preview}
                 alt="Preview"
@@ -81,7 +81,7 @@ export function UploadArea({
               />
               <button
                 onClick={onClear}
-                className="absolute top-2 right-2 p-2 bg-destructive text-destructive-foreground rounded-full hover:bg-destructive/90 transition-colors"
+                className="absolute top-2 right-2 p-2 bg-destructive text-destructive-foreground rounded-full hover:bg-destructive/90 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
                 aria-label="Remove image"
               >
                 <X className="h-4 w-4" />
@@ -98,25 +98,25 @@ export function UploadArea({
             onDrop={handleDrop}
             onClick={handleClick}
             className={cn(
-              'relative w-full h-64 rounded-lg border-2 border-dashed border-border flex flex-col items-center justify-center gap-4 cursor-pointer transition-colors',
+              'relative w-full h-48 sm:h-52 rounded-lg border-2 border-dashed border-border flex flex-col items-center justify-center gap-3 cursor-pointer transition-colors',
               isDragging && 'border-primary bg-primary/5',
               disabled && 'opacity-50 cursor-not-allowed'
             )}
           >
             <Upload
               className={cn(
-                'h-12 w-12 text-muted-foreground',
+                'h-10 w-10 text-muted-foreground',
                 isDragging && 'text-primary'
               )}
             />
-            <div className="text-center">
+            <div className="text-center space-y-1">
               <p className="text-sm font-medium text-foreground">
                 Drag & drop an image here
               </p>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-xs text-muted-foreground">
                 or click to browse
               </p>
-              <p className="text-xs text-muted-foreground mt-2">
+              <p className="text-xs text-muted-foreground mt-1.5">
                 Supported: JPG, PNG, GIF, BMP, TIFF (max 10MB)
               </p>
             </div>

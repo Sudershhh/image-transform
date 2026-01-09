@@ -1,19 +1,14 @@
-'use client';
+"use client";
 
-import { useImageUpload } from '@/hooks/useImageUpload';
-import { UploadArea } from './UploadArea';
-import { Button } from '@/components/ui/button';
-import { useImageStore } from '@/store/imageStore';
-import { Loader2 } from 'lucide-react';
+import { useImageUpload } from "@/hooks/useImageUpload";
+import { UploadArea } from "./UploadArea";
+import { Button } from "@/components/ui/button";
+import { useImageStore } from "@/store/imageStore";
+import { Loader2, Sparkles } from "lucide-react";
 
 export function UploadContainer() {
-  const {
-    preview,
-    error,
-    handleFileSelect,
-    uploadImage,
-    clearSelection,
-  } = useImageUpload();
+  const { preview, error, handleFileSelect, uploadImage, clearSelection } =
+    useImageUpload();
   const { uploading } = useImageStore();
 
   return (
@@ -29,16 +24,19 @@ export function UploadContainer() {
         <Button
           onClick={uploadImage}
           disabled={uploading}
-          className="w-full"
+          className="w-full h-12 text-sm font-medium rounded-xl"
           size="lg"
         >
           {uploading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Uploading...
+              Processing...
             </>
           ) : (
-            'Upload & Process'
+            <>
+              <Sparkles className="mr-2 h-4 w-4" />
+              Transform Image
+            </>
           )}
         </Button>
       )}
