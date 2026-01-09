@@ -1,0 +1,28 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  // ✅ NO url here - now configured in prisma.config.ts
+}
+
+model Image {
+  id              String   @id @default(uuid())
+  sessionId       String   @map("session_id")
+  originalFilename String? @map("original_filename")
+  originalUrl     String   @map("original_url")
+  originalS3Key   String   @map("original_s3_key")
+  processedUrl    String?  @map("processed_url")
+  processedS3Key  String?  @map("processed_s3_key")
+  status          String   @default("processing")
+  errorMessage    String?  @map("error_message")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@map("images")
+  @@index([sessionId])
+}
