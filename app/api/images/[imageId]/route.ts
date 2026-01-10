@@ -25,7 +25,7 @@ export async function GET(
     }
 
     // Regenerate presigned URLs to prevent expiration
-    const freshUrls: { originalUrl?: string; processedUrl?: string } = {};
+    const freshUrls: { originalUrl?: string; processedUrl?: string | null } = {};
 
     // Regenerate original URL
     try {
@@ -43,7 +43,7 @@ export async function GET(
       } catch (error) {
         console.error(`Error generating presigned URL for processed ${imageId}:`, error);
         // Fallback to stored URL if generation fails
-        freshUrls.processedUrl = image.processedUrl || null;
+        freshUrls.processedUrl = image.processedUrl ?? null;
       }
     }
 

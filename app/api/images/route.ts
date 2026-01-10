@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     // Regenerate presigned URLs for all images to prevent expiration
     const imagesWithFreshUrls = await Promise.all(
       images.map(async (image) => {
-        const freshUrls: { originalUrl?: string; processedUrl?: string } = {};
+        const freshUrls: { originalUrl?: string; processedUrl?: string | null } = {};
 
         // Regenerate original URL
         try {
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
           } catch (error) {
             console.error(`Error generating presigned URL for processed ${image.id}:`, error);
             // Fallback to stored URL if generation fails
-            freshUrls.processedUrl = image.processedUrl || null;
+            freshUrls.processedUrl = image.processedUrl ?? null;
           }
         }
 
