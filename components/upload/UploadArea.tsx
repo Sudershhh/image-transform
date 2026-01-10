@@ -81,7 +81,7 @@ export function UploadArea({
               />
               <button
                 onClick={onClear}
-                className="absolute top-2 right-2 p-2 bg-destructive text-destructive-foreground rounded-full hover:bg-destructive/90 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+                className="absolute top-2 right-2 p-2 bg-destructive text-destructive-foreground rounded-full hover:bg-destructive/90 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer"
                 aria-label="Remove image"
               >
                 <X className="h-4 w-4" />

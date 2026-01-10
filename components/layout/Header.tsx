@@ -1,6 +1,5 @@
 "use client"
 
-import { ThemeToggle } from "@/components/theme/ThemeToggle"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -25,7 +24,6 @@ export function Header() {
             FlipShot
           </span>
         </Link>
-        <ThemeToggle />
       </div>
     </header>
   )

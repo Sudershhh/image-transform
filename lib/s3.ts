@@ -3,6 +3,7 @@ import {
   PutObjectCommand,
   DeleteObjectCommand,
   GetObjectCommand,
+  HeadObjectCommand,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { env } from "./env";
@@ -56,4 +57,19 @@ export async function getPresignedUrl(
   });
 
   return presignedUrl;
+}
+
+export async function getObjectSize(key: string): Promise<number> {
+  try {
+    const command = new HeadObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: key,
+    });
+
+    const response = await s3Client.send(command);
+    return response.ContentLength || 0;
+  } catch (error) {
+    console.error(`Error getting size for ${key}:`, error);
+    return 0;
+  }
 }

@@ -10,7 +10,6 @@ export function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Defer state update to avoid synchronous setState in effect
     const timer = setTimeout(() => {
       setMounted(true);
     }, 0);
@@ -38,7 +37,7 @@ export function ThemeToggle() {
         type="button"
         onClick={() => setTheme("light")}
         className={cn(
-          "flex-1 flex items-center justify-center py-1.5 rounded-md transition-all relative z-10 min-h-[36px] border border-border/50",
+          "flex-1 flex items-center justify-center py-1.5 rounded-md transition-all relative z-10 min-h-[36px] border border-border/50 cursor-pointer",
           !isDark && "bg-background shadow-sm border-border"
         )}
         aria-label="Light theme"
@@ -54,7 +53,7 @@ export function ThemeToggle() {
         type="button"
         onClick={() => setTheme("dark")}
         className={cn(
-          "flex-1 flex items-center justify-center py-1.5 rounded-md transition-all relative z-10 min-h-[36px] border border-border/50",
+          "flex-1 flex items-center justify-center py-1.5 rounded-md transition-all relative z-10 min-h-[36px] border border-border/50 cursor-pointer",
           isDark && "bg-background shadow-sm border-border"
         )}
         aria-label="Dark theme"

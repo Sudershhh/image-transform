@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { getObjectSize } from '@/lib/s3';
 
 export async function GET(request: NextRequest) {
   try {
-    // Get total images count
     const totalImages = await prisma.image.count();
 
-    // Get images from last 7 days grouped by date
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     sevenDaysAgo.setHours(0, 0, 0, 0);
@@ -22,11 +21,9 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // Group by date for chart data
     const chartData: Record<string, number> = {};
     const today = new Date();
     
-    // Initialize last 7 days with 0
     for (let i = 6; i >= 0; i--) {
       const date = new Date(today);
       date.setDate(date.getDate() - i);
@@ -35,7 +32,6 @@ export async function GET(request: NextRequest) {
       chartData[dateKey] = 0;
     }
 
-    // Count images per day
     recentImages.forEach((image) => {
       const dateKey = new Date(image.createdAt).toISOString().split('T')[0];
       if (chartData[dateKey] !== undefined) {
@@ -43,19 +39,45 @@ export async function GET(request: NextRequest) {
       }
     });
 
-    // Convert to array format for chart
     const chartDataArray = Object.entries(chartData).map(([date, count]) => ({
       date,
       count,
     }));
 
-    // Calculate last 7 days count
     const last7DaysCount = recentImages.length;
 
-    // Estimate storage (rough calculation: assume average 500KB per image)
-    // This is a placeholder - in production you'd calculate actual S3 storage
-    const estimatedStorageMB = Math.round((totalImages * 500) / 1024);
-    const estimatedStorageGB = (estimatedStorageMB / 1024).toFixed(2);
+    const allImages = await prisma.image.findMany({
+      select: {
+        originalS3Key: true,
+        processedS3Key: true,
+      },
+    });
+
+    let totalStorageBytes = 0;
+    
+    const batchSize = 10;
+    for (let i = 0; i < allImages.length; i += batchSize) {
+      const batch = allImages.slice(i, i + batchSize);
+      const sizePromises = batch.flatMap((image) => {
+        const promises: Promise<number>[] = [];
+        
+        if (image.originalS3Key) {
+          promises.push(getObjectSize(image.originalS3Key));
+        }
+        
+        if (image.processedS3Key) {
+          promises.push(getObjectSize(image.processedS3Key));
+        }
+        
+        return promises;
+      });
+      
+      const sizes = await Promise.all(sizePromises);
+      totalStorageBytes += sizes.reduce((sum, size) => sum + size, 0);
+    }
+
+    const estimatedStorageMB = Math.round(totalStorageBytes / (1024 * 1024));
+    const estimatedStorageGB = (totalStorageBytes / (1024 * 1024 * 1024)).toFixed(2);
 
     return NextResponse.json({
       totalImages,

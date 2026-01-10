@@ -2,95 +2,99 @@
 
 import { motion } from "motion/react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Compare } from "@/components/ui/compare";
-import { ArrowRight } from "lucide-react";
-import { StatsCompact } from "@/components/landing/stats-compact";
+import { ArrowRight, ChevronDown } from "lucide-react";
+import FloatingLines from "@/components/FloatingLines";
+import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 
 export function HeroSection() {
-  const beforeImage = "/beer.jpg";
-  const afterImage = "/processed-beer.jpg";
+  const handleLearnMore = () => {
+    const featuresSection = document.getElementById("features-section");
+    if (featuresSection) {
+      featuresSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   return (
-    <section className="h-[calc(100vh-4rem)] md:h-screen flex items-center pt-24 md:pt-8">
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-full flex items-center">
-        <div className="grid md:grid-cols-2 gap-20 md:gap-32 lg:gap-40 items-center w-full h-full">
-          {/* Left: Intro Content + Stats */}
+    <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <FloatingLines
+          linesGradient={["#3d2d14", "#8b6d4a", "#8b2f1f", "#4a4a4a"]}
+          animationSpeed={1}
+          interactive={false}
+          bendRadius={5}
+          bendStrength={-0.5}
+          mouseDamping={0.05}
+          parallax
+          parallaxStrength={0.2}
+        />
+      </div>
+
+      <div className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.25, 0.4, 0.25, 1] }}
+          className="text-center space-y-8"
+        >
           <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, ease: [0.25, 0.4, 0.25, 1] }}
-            className="space-y-6 md:space-y-8 flex flex-col justify-center h-full"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="flex items-center justify-center gap-3 mb-4"
           >
-            {/* Headline */}
-            <div>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight text-balance mb-4">
-                Transform images with{" "}
-                <span className="text-primary">AI precision</span>
-              </h1>
-              <p className="text-base sm:text-lg lg:text-xl text-muted-foreground leading-relaxed">
-                Remove backgrounds, flip images, and enhance photos instantly.
-                Professional results in seconds.
-              </p>
+            <div className="relative w-10 h-10 rounded-lg overflow-hidden">
+              <Image
+                src="/polaroid.png"
+                alt="FlipShot"
+                width={40}
+                height={40}
+                className="object-cover w-full h-full"
+              />
             </div>
-
-            {/* CTA */}
-            <div className="flex items-center gap-4">
-              <Button
-                size="lg"
-                className="h-12 px-6 sm:px-8 text-base group min-h-[44px]"
-                asChild
-              >
-                <Link href="/home">
-                  Get started free
-                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Link>
-              </Button>
-            </div>
-
-            {/* Stats Dashboard */}
-            <div className="pt-4">
-              <StatsCompact />
-            </div>
+            <span className="text-2xl font-semibold tracking-tight text-foreground drop-shadow-lg">
+              FlipShot
+            </span>
           </motion.div>
 
-          {/* Right: Centered Compare Component */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{
-              duration: 0.7,
-              delay: 0.2,
-              ease: [0.25, 0.4, 0.25, 1],
-            }}
-            className="flex items-center justify-center h-full"
-          >
-            <div className="relative w-full max-w-lg px-4 sm:px-0">
-              <div className="absolute -inset-3 rounded-2xl bg-linear-to-br from-primary/20 via-chart-2/20 to-chart-3/20 blur-2xl opacity-40" />
-              <div className="relative rounded-xl border bg-card p-2 shadow-xl">
-                <Compare
-                  firstImage={beforeImage}
-                  secondImage={afterImage}
-                  slideMode="drag"
-                  showHandlebar={true}
-                  className="w-full aspect-[4/3] rounded-lg"
-                  firstImageClassName="object-cover"
-                  secondImageClassname="object-cover"
-                />
-                <div className="mt-3 flex justify-between px-2 pb-1 text-sm text-muted-foreground">
-                  <span className="flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full bg-muted-foreground/40" />
-                    Original
-                  </span>
-                  <span className="flex items-center gap-2">
-                    Transformed
-                    <span className="h-2 w-2 rounded-full bg-primary" />
-                  </span>
-                </div>
-              </div>
+          <div className="space-y-4">
+            <div className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]">
+              <TextGenerateEffect
+                words="Transform images with AI precision"
+                className="text-foreground"
+                filter={true}
+                duration={0.5}
+              />
             </div>
-          </motion.div>
-        </div>
+            <p className="text-lg sm:text-xl lg:text-2xl text-foreground/90 leading-relaxed max-w-2xl mx-auto drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)]">
+              Remove backgrounds, flip images, and enhance photos instantly.
+              Professional results in seconds.
+            </p>
+          </div>
+
+          <div className="flex items-center justify-center gap-4 pt-4">
+            <Button
+              size="lg"
+              className="h-12 px-8 text-base group min-h-[44px]"
+              asChild
+            >
+              <Link href="/home">
+                Get Started
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="h-12 px-8 text-base min-h-[44px]"
+              onClick={handleLearnMore}
+            >
+              Learn More
+              <ChevronDown className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
