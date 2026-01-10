@@ -91,7 +91,11 @@ graph TD
 
 - **Next.js Frontend**: React UI for upload and image display
 - **Next.js API Routes**: Handles upload, image listing, and stats
-- **PostgreSQL**: Stores image metadata (id, URLs, status, session)
+  - `/api/images` - Lists all images for current session, regenerates presigned URLs
+  - `/api/images/[imageId]` - Fetches single image, regenerates presigned URLs
+  - `/api/upload` - Handles image upload and initiates processing
+  - `/api/stats` - Returns processing statistics
+- **PostgreSQL**: Stores image metadata (id, S3 keys, URLs, status, session)
 - **AWS S3**: Stores original, temporary, and processed images
 - **Remove.bg API**: Removes image backgrounds
 - **Pixelixe API**: Applies horizontal flip transformation
@@ -102,13 +106,18 @@ graph TD
   - `original/` - Original uploaded images
   - `temp/` - Intermediate files (cleaned up after processing)
   - `processed/` - Final transformed images
-- **Database**: Stores metadata only (URLs, status, timestamps)
+- **Database**: Stores metadata only (S3 keys, URLs, status, timestamps)
 - **Presigned URLs**: Used for secure, time-limited access
+  - URLs are regenerated on-demand when fetching images via API endpoints
+  - Each regenerated URL expires after 7 days (604,800 seconds)
+  - S3 keys are stored in the database to enable URL regeneration
+  - This ensures images remain accessible even after initial URLs expire
 
 ### Tradeoffs
 
 - **Synchronous Processing**: Images are processed asynchronously after upload response, but without a queue system. High volume may require queue implementation.
 - **Temp File Cleanup**: Temporary files are deleted after processing, but cleanup failures are non-critical and may leave orphaned files.
+- **URL Regeneration**: Presigned URLs are regenerated on every API fetch, which adds slight latency but ensures URLs never expire while users are viewing images. The 7-day expiration provides a good balance between security and usability.
 
 ### Assumptions
 

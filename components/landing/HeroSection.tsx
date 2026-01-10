@@ -18,7 +18,7 @@ export function HeroSection() {
 
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 bg-neutral-900">
         <FloatingLines
           linesGradient={["#3d2d14", "#8b6d4a", "#8b2f1f", "#4a4a4a"]}
           animationSpeed={1}
@@ -59,7 +59,7 @@ export function HeroSection() {
           </motion.div>
 
           <div className="space-y-4">
-            <div className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]">
+            <div className="text-5xl sm:text-6xl lg:text-7xl font-semibold tracking-tight leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]">
               <TextGenerateEffect
                 words="Transform images with AI precision"
                 className="text-foreground"
