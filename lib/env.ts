@@ -20,30 +20,39 @@ function getEnvOptional(
 }
 
 export const env = {
-  // Database
-  DATABASE_URL: getEnv("DATABASE_URL"),
+  get DATABASE_URL() {
+    return getEnv("DATABASE_URL");
+  },
 
-  // AWS S3 Configuration
-  AWS_ACCESS_KEY_ID: getEnv("AWS_ACCESS_KEY_ID"),
-  AWS_SECRET_ACCESS_KEY: getEnv("AWS_SECRET_ACCESS_KEY"),
-  AWS_REGION: getEnv("AWS_REGION", "us-east-1"),
-  AWS_S3_BUCKET_NAME: getEnv("AWS_S3_BUCKET_NAME"),
+  get AWS_ACCESS_KEY_ID() {
+    return getEnv("AWS_ACCESS_KEY_ID");
+  },
+  get AWS_SECRET_ACCESS_KEY() {
+    return getEnv("AWS_SECRET_ACCESS_KEY");
+  },
+  get AWS_REGION() {
+    return getEnv("AWS_REGION", "us-east-1");
+  },
+  get AWS_S3_BUCKET_NAME() {
+    return getEnv("AWS_S3_BUCKET_NAME");
+  },
 
-  // External APIs
-  BG_REMOVE_API_KEY: getEnv("BG_REMOVE_API_KEY"),
-  PIXELIXE_API_KEY: getEnv("PIXELIXE_API_KEY"),
+  get BG_REMOVE_API_KEY() {
+    return getEnv("BG_REMOVE_API_KEY");
+  },
+  get PIXELIXE_API_KEY() {
+    return getEnv("PIXELIXE_API_KEY");
+  },
 
-  // App Configuration
-  NODE_ENV: getEnvOptional("NODE_ENV", "development"),
-  NEXT_PUBLIC_APP_URL: getEnvOptional(
-    "NEXT_PUBLIC_APP_URL",
-    "http://localhost:3000"
-  ),
+  get NODE_ENV() {
+    return getEnvOptional("NODE_ENV", "development");
+  },
+  get NEXT_PUBLIC_APP_URL() {
+    return getEnvOptional("NEXT_PUBLIC_APP_URL", "http://localhost:3000");
+  },
 } as const;
 
-// Validate critical environment variables on module load
 if (typeof window === "undefined") {
-  // Server-side validation
   const requiredVars = [
     "DATABASE_URL",
     "AWS_ACCESS_KEY_ID",
