@@ -2,7 +2,7 @@
 
 import { ThemeToggle } from "@/components/theme/ThemeToggle"
 import Link from "next/link"
-import { Zap } from "lucide-react"
+import Image from "next/image"
 
 export function Header() {
   return (
@@ -12,8 +12,14 @@ export function Header() {
           href="/" 
           className="flex items-center gap-2.5 hover:opacity-80 transition-opacity"
         >
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary">
-            <Zap className="h-4 w-4 text-primary-foreground" />
+          <div className="relative w-8 h-8 rounded-lg overflow-hidden">
+            <Image
+              src="/polaroid.png"
+              alt="FlipShot"
+              width={32}
+              height={32}
+              className="object-cover w-full h-full"
+            />
           </div>
           <span className="text-lg font-semibold tracking-tight text-foreground">
             FlipShot
