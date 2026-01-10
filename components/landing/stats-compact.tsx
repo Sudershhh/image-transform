@@ -1,111 +1,135 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import { useEffect, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import {
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent,
   type ChartConfig,
-} from "@/components/ui/chart"
-import { ImageIcon } from "lucide-react"
+} from "@/components/ui/chart";
+import { HardDrive } from "lucide-react";
 
 interface StatsData {
-  totalImages: number
-  chartData: Array<{ date: string; count: number }>
+  estimatedStorageMB: number;
+  chartData: Array<{ date: string; count: number }>;
 }
 
 const chartConfig = {
   images: {
-    label: "Images Generated",
+    label: "Images",
     color: "var(--chart-1)",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
 export function StatsCompact() {
-  const [stats, setStats] = useState<StatsData | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [stats, setStats] = useState<StatsData | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch("/api/stats")
-        if (!response.ok) throw new Error("Failed to fetch stats")
-        const data = await response.json()
+        const response = await fetch("/api/stats");
+        if (!response.ok) throw new Error("Failed to fetch stats");
+        const data = await response.json();
         setStats({
-          totalImages: data.totalImages,
+          estimatedStorageMB: data.estimatedStorageMB,
           chartData: data.chartData,
-        })
+        });
       } catch (error) {
-        console.error("Error fetching stats:", error)
+        console.error("Error fetching stats:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchStats()
-  }, [])
+    fetchStats();
+  }, []);
 
-  // Format chart data for recharts
-  const chartData = stats?.chartData.map((item) => ({
-    date: new Date(item.date).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-    }),
-    images: item.count,
-    fullDate: item.date,
-  })) || []
+  const chartData =
+    stats?.chartData.map((item) => ({
+      date: new Date(item.date).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      }),
+      images: item.count,
+      fullDate: item.date,
+    })) || [];
+
+  const CustomTooltipContent = ({ active, payload }: any) => {
+    if (!active || !payload?.length) return null;
+    const data = payload[0];
+    const fullDate = data.payload?.fullDate;
+
+    return (
+      <div className="rounded-lg border bg-background px-3 py-2 shadow-md">
+        <p className="text-xs font-medium text-foreground mb-1.5">
+          {fullDate
+            ? new Date(fullDate).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })
+            : data.payload?.date}
+        </p>
+        <div className="flex items-center gap-2">
+          <span
+            className="h-2.5 w-2.5 rounded-sm shrink-0"
+            style={{ backgroundColor: data.color }}
+          />
+          <span className="text-xs text-muted-foreground">Images</span>
+          <span className="text-xs font-medium text-foreground ml-auto">
+            {data.value}
+          </span>
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {/* Number of Images Processed */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      {/* Storage Card */}
       <Card className="border shadow-sm">
-        <CardHeader className="pb-3">
+        <CardHeader className="px-4 pt-4 pb-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Images Processed
+              Storage
             </CardTitle>
-            <div className="p-2 rounded-lg bg-primary/10">
-              <ImageIcon className="h-4 w-4 text-primary" />
+            <div className="p-1.5 rounded-lg bg-primary/10">
+              <HardDrive className="h-4 w-4 text-primary" />
             </div>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-4 pb-4">
           {loading ? (
-            <div className="h-12 w-32 bg-muted animate-pulse rounded" />
+            <div className="h-8 w-20 bg-muted animate-pulse rounded mx-auto" />
           ) : (
-            <div className="text-4xl font-bold tracking-tight text-primary">
-              {stats?.totalImages.toLocaleString() || "0"}
+            <div className="text-5xl sm:text-5xl font-bold tracking-tight text-primary text-center">
+              {stats?.estimatedStorageMB.toLocaleString() || "0"}
             </div>
           )}
-          <p className="text-xs text-muted-foreground mt-2">
-            Total transformations
+          <p className="text-sm text-muted-foreground mt-4 text-center">
+            MB used
           </p>
         </CardContent>
       </Card>
 
-      {/* Bar Chart */}
+      {/* Bar Chart Card */}
       <Card className="border shadow-sm">
-        <CardHeader className="pb-3">
+        <CardHeader className="px-4 pt-4 pb-3">
           <CardTitle className="text-sm font-medium text-muted-foreground">
             Recent Activity
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-4 pb-4">
           {loading ? (
-            <div className="h-24 w-full bg-muted animate-pulse rounded" />
+            <div className="h-16 w-full bg-muted animate-pulse rounded" />
           ) : (
             <>
-              <ChartContainer config={chartConfig} className="h-24 w-full mb-4">
+              <ChartContainer config={chartConfig} className="h-16 w-full mb-2">
                 <BarChart
                   data={chartData}
-                  margin={{
-                    left: 0,
-                    right: 0,
-                    top: 0,
-                    bottom: 8,
-                  }}
+                  margin={{ left: 0, right: 0, top: 0, bottom: 8 }}
                 >
                   <CartesianGrid vertical={false} strokeDasharray="3 3" />
                   <XAxis
@@ -115,25 +139,7 @@ export function StatsCompact() {
                     tickMargin={8}
                     tick={{ fontSize: 10 }}
                   />
-                  <ChartTooltip
-                    content={
-                      <ChartTooltipContent
-                        labelFormatter={(value, payload) => {
-                          const item = payload?.[0]?.payload
-                          return item?.fullDate
-                            ? new Date(item.fullDate).toLocaleDateString(
-                                "en-US",
-                                {
-                                  month: "short",
-                                  day: "numeric",
-                                  year: "numeric",
-                                }
-                              )
-                            : value
-                        }}
-                      />
-                    }
-                  />
+                  <ChartTooltip content={<CustomTooltipContent />} />
                   <Bar
                     dataKey="images"
                     fill="var(--color-images)"
@@ -141,7 +147,7 @@ export function StatsCompact() {
                   />
                 </BarChart>
               </ChartContainer>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-sm text-muted-foreground mt-1.5">
                 Last 7 days
               </p>
             </>
@@ -149,5 +155,5 @@ export function StatsCompact() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
